@@ -1,0 +1,11 @@
+.cs-message {
+	position: absolute;
+	background-color: #ebf4dd;
+	border: solid 1px #64992C;
+	border-radius: 3px;
+	padding: 10px;
+	top: 20px;
+    left: 50%;
+    margin-left: -100px;
+    width: 200px;
+}

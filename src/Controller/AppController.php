@@ -20,4 +20,17 @@ class AppController
         $response->setData($data);
         return $response;
     }
+
+    public function fetchPageAction(Request $request, $account, $pagename, $actionname)
+    {
+        $data = array('account' => $account, 'pagename' => $pagename, 'actionname' => $actionname, 'content' => 'This is the message content.');
+        return new Response("window.ContextService.jsonpCallback(".json_encode($data).");");
+    }
+
+    public function testAction(Request $request)
+    {
+        $html = file_get_contents(__DIR__ . '/../Resources/views/test.html');
+        $response = new Response($html);
+        return $response;
+    }
 }

@@ -1,0 +1,38 @@
+<html>
+    <head>
+        <title>Context service test page</title>
+    </head>
+    <body>
+        <h1>Context service examples</h1>
+        <button type="button" data-csid="/faq/index">Test</button>
+
+        <!-- Context service code -->
+        <script>
+        (function(i,d,uri,varName,s,m){
+            i[varName] = i[varName]||{
+                baseUri: uri,l:[],response:null,
+                account: function(v){
+                    this.account = v;
+                    return this;
+                },
+                add: function(v){
+                    this.l.push(v);
+                    return this;
+                }}
+            s = d.createElement('script');
+            m = d.getElementsByTagName('script')[0];
+            s.async=1;
+            s.src=uri+'contextservice.js';
+            m.parentNode.insertBefore(s,m);
+
+            s = d.createElement('link');
+            s.rel='stylesheet';
+            s.href=uri+'contextservice.css';
+            m.parentNode.insertBefore(s,m);
+        })(window,document,'//l.com:8787/','ContextService');
+        ContextService.account('linkorb').add('invoice').add('list');
+        </script>
+        <!-- End Context service code -->
+
+    </body>
+</html>
