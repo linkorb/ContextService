@@ -6,6 +6,11 @@
             "type": "article"
         },
         {
+            "contentid": "installing_chrome",
+            "title": "How do I install Google Chrome?",
+            "type": "article"
+        },
+        {
             "contentid": "how_to_login",
             "title": "How to log in?",
             "type": "faq",
