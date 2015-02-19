@@ -1,0 +1,9 @@
+{
+    "title": "About the loginscreen",
+    "type": "article",
+    "body": "<h1>About the loginscreen</h1><p>The login screen can be used to either login, or signup</p>",
+    "seealso": [
+        "how_to_login",
+        "how_to_sign_up"
+    ]
+}

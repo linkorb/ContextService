@@ -1,9 +1,9 @@
 {
     "title": "How to log in?",
     "type": "faq",
-    "body": "<h1>hello</h1><p>Hello world</p>",
+    "body": "<h1>How to login?</h1><p>You can login using the login box.</p>",
     "seealso": [
-        "how_to_signup",
+        "how_to_sign_up",
         "how_to_logout"
     ]
 }

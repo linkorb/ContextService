@@ -1,0 +1,8 @@
+{
+    "title": "Why should I sign up?",
+    "type": "faq",
+    "body": "<h1>Why should I sign up?</h1><p>It'll be awesome!</p>",
+    "seealso": [
+        "how_to_signup"
+    ]
+}
