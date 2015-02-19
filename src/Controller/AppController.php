@@ -29,7 +29,7 @@ class AppController
 
     public function testAction(Request $request)
     {
-        $html = file_get_contents(__DIR__ . '/../Resources/views/test.html');
+        $html = file_get_contents(__DIR__ . '/../Resources/views/demo.html');
         $response = new Response($html);
         return $response;
     }

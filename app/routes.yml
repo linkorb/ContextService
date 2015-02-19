@@ -2,8 +2,8 @@ index:
     path: /
     defaults:  { _controller: ContextService\Server\Controller\AppController::indexAction }
 test:
-    pattern: /test
+    pattern: /demo
     defaults:  { _controller: ContextService\Server\Controller\AppController::testAction }
 fetch_page:
-    pattern: /fetchpage/{account}/{pagename}/{actionname}
-    defaults:  { _controller: ContextService\Server\Controller\AppController::fetchPageAction }
+    pattern: /api/v1/fetchindex/{account}/{contextid}
+    defaults:  { _controller: ContextService\Server\Controller\AppController::fetchIndexAction }

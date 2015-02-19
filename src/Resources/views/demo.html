@@ -2,7 +2,7 @@
     <head>
         <title>Context service test page</title>
     </head>
-    <body>
+    <body >
         <h1>Context service examples</h1>
         <button type="button" data-csid="/faq/index">Test</button>
 
@@ -29,10 +29,9 @@
             s.rel='stylesheet';
             s.href=uri+'contextservice.css';
             m.parentNode.insertBefore(s,m);
-        })(window,document,'//l.com:8787/','ContextService');
-        ContextService.account('linkorb').add('invoice').add('list');
+        })(window,document,'//localhost:8787/','ContextService');
+        ContextService.account('demo').contextid('hello_world');
         </script>
         <!-- End Context service code -->
-
     </body>
 </html>
