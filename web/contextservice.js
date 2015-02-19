@@ -4,22 +4,27 @@
         w.console.log(msg);
     },
     jsonp = function(url, callback) {
-      var head = d.head, s = d.createElement('script');
-      s.src=url;
-      head.appendChild(s);
-      head.removeChild(s);
+        var head = d.head, s = d.createElement('script');
+        s.src=url;
+        head.appendChild(s);
+        head.removeChild(s);
     },
     jsonpCallback = function(data) {
-      // d.getElementById('response').textContent = JSON.stringify(data);
-      var b = d.createElement('div');
-      b.className = 'cs-message';
-      b.innerHTML = data.content;
-      d.body.appendChild(b);
-      log(data);
+        csObject.response = data;
+        popupResponse();
+    },
+    popupResponse = function() {
+        var b = d.createElement('div');
+        b.className = 'cs-message';
+        b.innerHTML = csObject.response.content;
+        d.body.appendChild(b);
     },
 
     init = function() {
         csObject = w.ContextService;
+        if (!csObject) {
+            return false;
+        }
         csObject.jsonpCallback = jsonpCallback;
         listen();
         fetchPage();
@@ -32,14 +37,12 @@
     },
     load = function(event) {
         var id = event.target.dataset.csid.replace(/\./g, '___');
-        log(id);
+        // log(id);
     },
     fetchPage = function(){
-        var i=0, url = csObject.baseUri+'fetchpage/'+csObject.account;
-        for (i = 0; i < csObject.l.length; i++) {
-            url+='/'+csObject.l[i];
+        if (csObject.account && csObject.contextid) {
+            jsonp(csObject.baseUri+'api/v1/fetchindex/'+csObject.account+'/'+csObject.contextid);
         }
-        jsonp(url);
     };
     w.addEventListener('load', init, false);
 })(window, document);

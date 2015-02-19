@@ -8,15 +8,17 @@
 
         <!-- Context service code -->
         <script>
-        (function(i,d,uri,varName,s,m){
-            i[varName] = i[varName]||{
-                baseUri: uri,l:[],response:null,
+        (function(w,d,uri,varName,s,m){
+            w[varName] = w[varName]||{
+                baseUri:uri,
+                account:'',
+                contextid:'',
                 account: function(v){
-                    this.account = v;
+                    this.account=v;
                     return this;
                 },
-                add: function(v){
-                    this.l.push(v);
+                contextid: function(v){
+                    this.contextid=v;
                     return this;
                 }}
             s = d.createElement('script');

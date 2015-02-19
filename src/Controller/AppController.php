@@ -15,13 +15,13 @@ class AppController
     
     public function indexAction(Application $app, Request $request)
     {
-        $data = array("cool" => "awesome");
+        $data = array('ContextService' => 'is awesome');
         $response = new JsonResponse();
         $response->setData($data);
         return $response;
     }
 
-    public function fetchIndexAction(Application $app, Request $request, $account, $contextid)
+    public function getIndexAction(Application $app, Request $request, $account, $contextid)
     {
 
         
@@ -56,7 +56,7 @@ class AppController
         return $response;
     }
 
-    public function testAction(Request $request)
+    public function demoAction(Request $request)
     {
         $html = file_get_contents(__DIR__ . '/../Resources/views/demo.html');
         $response = new Response($html);
