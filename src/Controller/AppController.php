@@ -21,10 +21,39 @@ class AppController
         return $response;
     }
 
-    public function fetchPageAction(Request $request, $account, $pagename, $actionname)
+    public function fetchIndexAction(Application $app, Request $request, $account, $contextid)
     {
-        $data = array('account' => $account, 'pagename' => $pagename, 'actionname' => $actionname, 'content' => 'This is the message content.');
-        return new Response("window.ContextService.jsonpCallback(".json_encode($data).");");
+
+        
+        $filename = $app['contextservice.datapath'] . '/account/' . $account . '/context/' . $contextid . '.json';
+        if (!file_exists($filename)) {
+            return $this->returnJsonError("No content found for this account + contextid");
+        }
+        $json = file_get_contents($filename);
+        // Validate if the content is valid json
+        $data = json_decode($json, true);
+    
+        //$data = array('account' => $account, 'contextid' => $contextid, 'content' => 'This is the message content.');
+        
+        switch ($app['contextservice.responsemode']) {
+            case "json":
+                $response = new JsonResponse();
+                $response->setData($data);
+                break;
+            default:
+                $response = new Response("window.ContextService.jsonpCallback(".json_encode($data).");");
+                break;
+        }
+        return $response;
+    }
+    
+    public function returnJsonError($message)
+    {
+        $data = array();
+        $data['message'] = $message;
+        $response = new JsonResponse();
+        $response->setData($data);
+        return $response;
     }
 
     public function testAction(Request $request)
