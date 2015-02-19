@@ -4,6 +4,6 @@ index:
 demo:
     pattern: /demo
     defaults:  { _controller: ContextService\Server\Controller\AppController::demoAction }
-fetch_index:
+get_index:
     pattern: /api/v1/index/{account}/{contextid}
     defaults:  { _controller: ContextService\Server\Controller\AppController::getIndexAction }

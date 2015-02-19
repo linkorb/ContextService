@@ -13,7 +13,7 @@ class AppController
 {
     private $baseurl;
     
-    public function indexAction(Application $app, Request $request)
+    public function indexAction()
     {
         $data = array('ContextService' => 'is awesome');
         $response = new JsonResponse();
@@ -21,7 +21,7 @@ class AppController
         return $response;
     }
 
-    public function getIndexAction(Application $app, Request $request, $account, $contextid)
+    public function getIndexAction(Application $app, $account, $contextid)
     {
 
         
@@ -32,8 +32,6 @@ class AppController
         $json = file_get_contents($filename);
         // Validate if the content is valid json
         $data = json_decode($json, true);
-    
-        //$data = array('account' => $account, 'contextid' => $contextid, 'content' => 'This is the message content.');
         
         switch ($app['contextservice.responsemode']) {
             case "json":
@@ -42,6 +40,7 @@ class AppController
                 break;
             default:
                 $response = new Response("window.ContextService.jsonpCallback(".json_encode($data).");");
+                $response->headers->set('Content-Type', 'text/javascript');
                 break;
         }
         return $response;
@@ -56,7 +55,7 @@ class AppController
         return $response;
     }
 
-    public function demoAction(Request $request)
+    public function demoAction()
     {
         $html = file_get_contents(__DIR__ . '/../Resources/views/demo.html');
         $response = new Response($html);
