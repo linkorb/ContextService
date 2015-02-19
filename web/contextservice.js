@@ -24,12 +24,21 @@
 
     init = function() {
         csObject = w.ContextService;
-        if (!csObject) {
-            return false;
+        if (csObject) {
+            csObject.jsonpCallback = jsonpCallback;
+            initPage();
+            listen();
+            fetchPage();
         }
-        csObject.jsonpCallback = jsonpCallback;
-        listen();
-        fetchPage();
+    },
+    initPage = function(){
+        csObject.contentContainer = d.querySelector('#cs_content_container') || createContentContainer();
+    },
+    createContentContainer = function(){
+        var c = d.createElement('div');
+        c.id='cs_content_container';
+        c.style.display='none';
+        d.body.appendChild(c);
     },
     listen = function(){
         var eles = d.querySelectorAll('[data-csid]');
@@ -47,4 +56,8 @@
         }
     };
     w.addEventListener('load', init, false);
+    var style = d.createElement('link');
+    style.rel='stylesheet';
+    style.href=w.ContextService.baseUri+'contextservice.css';
+    d.head.appendChild(style);
 })(window, document);
