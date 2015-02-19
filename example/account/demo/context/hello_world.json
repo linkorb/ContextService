@@ -1,0 +1,15 @@
+{
+    "content": [
+        {
+            "contentid": "how_to_login",
+            "title": "How to log in?",
+            "type": "faq"
+        },
+        {
+            "contentid": "how_to_sign_up",
+            "title": "How to sign up?",
+            "type": "faq",
+            "cssselector": "button#signup"
+        }
+    ]
+}
