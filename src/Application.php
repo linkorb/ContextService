@@ -34,6 +34,8 @@ class Application extends SilexApplication
     private function configureApplication()
     {
         $this['contextservice.baseurl'] = 'http://localhost:8787'; // TODO: Use config file
+        $this['contextservice.datapath'] = $this['contextservice.basepath'] . '/example';
+        $this['contextservice.responsemode'] = 'script';
         //$parser = new YamlParser();
         //$config = $parser->parse(file_get_contents($this['contextservice.basepath'] . '/mugshot.yml'));
         //print_r($config);
