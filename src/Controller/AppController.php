@@ -15,19 +15,19 @@ class AppController
     
     public function indexAction(Application $app, Request $request)
     {
-        $data = array("cool" => "awesome");
+        $data = array('ContextService' => 'is awesome');
         $response = new JsonResponse();
         $response->setData($data);
         return $response;
     }
 
-    public function fetchPageAction(Request $request, $account, $pagename, $actionname)
+    public function fetchIndexAction(Request $request, $account, $contextid)
     {
-        $data = array('account' => $account, 'pagename' => $pagename, 'actionname' => $actionname, 'content' => 'This is the message content.');
+        $data = array('account' => $account, 'content' => 'This is the message content of <b>'.$contextid.'</b>.');
         return new Response("window.ContextService.jsonpCallback(".json_encode($data).");");
     }
 
-    public function testAction(Request $request)
+    public function demoAction(Request $request)
     {
         $html = file_get_contents(__DIR__ . '/../Resources/views/demo.html');
         $response = new Response($html);
