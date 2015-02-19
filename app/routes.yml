@@ -5,5 +5,5 @@ test:
     pattern: /demo
     defaults:  { _controller: ContextService\Server\Controller\AppController::testAction }
 fetch_page:
-    pattern: /api/v1/fetchindex/{account}/{contextid}
+    pattern: /api/v1/index/{account}/{contextid}
     defaults:  { _controller: ContextService\Server\Controller\AppController::fetchIndexAction }
