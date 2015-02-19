@@ -14,3 +14,6 @@
 .cs-message:hover {
 	opacity: 1;
 }
+body[data-cs-active="true"] [data-cs-highlight="true"] {
+	border: solid 1px red;
+}
