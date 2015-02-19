@@ -1,0 +1,8 @@
+{
+    "title": "Dev Login note #1",
+    "type": "internal",
+    "body": "<h1>Dev Login note #1</h1><p>The login screen is developed in PHP</p>",
+    "seealso": [
+        "dev_login2"
+    ]
+}

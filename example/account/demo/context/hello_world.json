@@ -1,13 +1,25 @@
 {
     "content": [
         {
+            "contentid": "about_login_screen",
+            "title": "About the loginscreen",
+            "type": "article"
+        },
+        {
             "contentid": "how_to_login",
             "title": "How to log in?",
-            "type": "faq"
+            "type": "faq",
+            "cssselector": "button#login"
         },
         {
             "contentid": "how_to_sign_up",
             "title": "How to sign up?",
+            "type": "faq",
+            "cssselector": "button#signup"
+        },
+        {
+            "contentid": "why_sign_up",
+            "title": "Why should I sign up?",
             "type": "faq",
             "cssselector": "button#signup"
         }
