@@ -53,8 +53,10 @@ class AppController
             return $this->returnJsonError("No content found for this account + contextid");
         }
         $json = file_get_contents($filename);
+
         // Validate if the content is valid json
         $data = json_decode($json, true);
+        $data['contentid'] = $contentid;
         
         switch ($app['contextservice.responsemode']) {
             case "json":
@@ -103,5 +105,4 @@ class AppController
         $response = new Response($html);
         return $response;
     }
-    
 }

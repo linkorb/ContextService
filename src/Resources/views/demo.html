@@ -45,27 +45,26 @@
 
         <!-- Context service code -->
         <script>
-        (function(w,d,uri,varName,s,m){
-            w[varName] = w[varName]||{
-                baseUri:uri,
-                account:'',
-                contextid:'',
+        (function(w,d,f,k){
+            w[k] = w[k]||{
+                baseUri:f,
                 account: function(v){
                     this.account=v;
-                    return this;
                 },
                 contextid: function(v){
                     this.contextid=v;
-                    return this;
                 }}
-            s = d.createElement('script');
-            m = d.getElementsByTagName('script')[0];
+            var s=d.createElement('script'), m=d.getElementsByTagName('script')[0];
             s.async=1;
-            s.src=uri+'contextservice.js';
+            s.src=f+'contextservice.js';
             m.parentNode.insertBefore(s,m);
         })(window,document,'//localhost:8787/','ContextService');
-        ContextService.account('demo').contextid('hello_world');
+
+        ContextService.account('demo');
+        ContextService.contextid('hello_world');
+        
         </script>
         <!-- End Context service code -->
+
     </body>
 </html>

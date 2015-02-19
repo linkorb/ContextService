@@ -1,5 +1,17 @@
 (function(w,d){
-    var csObject = {},
+    // CSO = Context Service Object
+    var CSO = {},
+    init = function() {
+        CSO = w.ContextService;
+        if (CSO) {
+            CSO.jsonpIndexCallback = jsonpIndexCallback;
+            CSO.jsonpContentCallback = jsonpContentCallback;
+            CSO.contentResponse = [];
+            listen();
+            fetchIndex();
+            attachKeyObserver();
+        }
+    },
     log = function(msg){
         w.console.log(msg);
     },
@@ -9,51 +21,72 @@
         head.appendChild(s);
         head.removeChild(s);
     },
-    jsonpCallback = function(data) {
-        csObject.response = data;
-        popupResponse();
-    },
-    popupResponse = function() {
-        var b = d.createElement('div'),i;
-        b.className = 'cs-message';
-        for (i in csObject.response.content) {
-            b.innerHTML+= '<div>'+csObject.response.content[i].title+'</div>';
+    fetchIndex = function(){
+        if (CSO.account && CSO.contextid) {
+            jsonp(CSO.baseUri+'api/v1/index/'+CSO.account+'/'+CSO.contextid);
         }
-        d.body.appendChild(b);
+    },
+    
+    jsonpIndexCallback = function(data) {
+        CSO.indexResponse = data;
+        prepareIndexData();
+    },
+    jsonpContentCallback = function(data){
+        log(data.contentid);
+        CSO.contentResponse[data.contentid] = data;
+        // CSO.contentResponse.push(data);
+        // prepareContentData();
+    },
+    prepareIndexData = function() {
+        var id = 'cs_index_container', o='';
+        CSO.indexDataContainer = d.querySelector('#'+id) || createElementInBody(id, 'cs-message', true);
+
+        for (i in CSO.indexResponse.content) {
+            // generate index HTML
+            o+='<li id="cs_index_item_'+(CSO.indexResponse.content[i].contentid||'')+'">'+CSO.indexResponse.content[i].title+'</li>';
+            // observers
+            listen(CSO.indexResponse.content[i].cssselector||null, CSO.indexResponse.content[i].contentid||null);
+        }
+        CSO.indexDataContainer.innerHTML = '<ul>'+o+'</ul>';
+    },
+    prepareContentData = function(){
+        log(CSO.contentResponse);
     },
 
-    init = function() {
-        csObject = w.ContextService;
-        if (csObject) {
-            csObject.jsonpCallback = jsonpCallback;
-            initPage();
-            listen();
-            fetchPage();
-        }
-    },
-    initPage = function(){
-        csObject.contentContainer = d.querySelector('#cs_content_container') || createContentContainer();
-    },
-    createContentContainer = function(){
+    createElementInBody = function(id, className, hidden){
         var c = d.createElement('div');
-        c.id='cs_content_container';
-        c.style.display='none';
+        if (id)
+            c.id=id;
+        if (className)
+            c.className=className;
+        if (hidden)
+            c.style.display='none';
         d.body.appendChild(c);
+        return c;
     },
-    listen = function(){
-        var eles = d.querySelectorAll('[data-csid]');
-        for (var i = 0; i < eles.length; i++) {
+
+    listen = function(CssSelector, contentid){
+        if (!CssSelector)
+            return;
+        var eles = d.querySelectorAll(CssSelector),i;
+        for (i = 0; i < eles.length; i++) {
             eles[i].addEventListener('click', load, false);
+            eles[i].dataset.csContentId = contentid;
         };
     },
-    load = function(event) {
-        var id = event.target.dataset.csid.replace(/\./g, '___');
-        // log(id);
+    attachKeyObserver = function(){
+        d.addEventListener('keyup', function(event){
+            var code=event.keyCode||event.which;
+            // if (event.altKey && code==16) {
+            if (code==16) {
+                var ele=d.querySelector('#cs_index_container');
+                ele.style.display=ele.style.display=='none'?'':'none';
+            }
+        });
     },
-    fetchPage = function(){
-        if (csObject.account && csObject.contextid) {
-            jsonp(csObject.baseUri+'api/v1/index/'+csObject.account+'/'+csObject.contextid);
-        }
+    load = function(event) {
+        var contentid = event.target.dataset.csContentId;//.replace(/\./g, '___');
+        jsonp(CSO.baseUri+'api/v1/content/'+CSO.account+'/'+contentid);
     };
     w.addEventListener('load', init, false);
     var style = d.createElement('link');

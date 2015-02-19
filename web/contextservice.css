@@ -6,6 +6,11 @@
 	padding: 10px;
 	top: 20px;
     left: 50%;
-    margin-left: -100px;
-    width: 200px;
+    margin-left: -200px;
+    width: 400px;
+
+    opacity: 0.7;
+}
+.cs-message:hover {
+	opacity: 1;
 }
