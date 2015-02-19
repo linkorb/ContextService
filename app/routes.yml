@@ -4,6 +4,15 @@ index:
 demo:
     pattern: /demo
     defaults:  { _controller: ContextService\Server\Controller\AppController::demoAction }
-get_index:
+
+view_content:
+    pattern: /content/{account}/{contentid}
+    defaults:  { _controller: ContextService\Server\Controller\AppController::viewContentAction }
+    
+api_v1_get_index:
     pattern: /api/v1/index/{account}/{contextid}
     defaults:  { _controller: ContextService\Server\Controller\AppController::getIndexAction }
+    
+api_v1_get_content:
+    pattern: /api/v1/content/{account}/{contentid}
+    defaults:  { _controller: ContextService\Server\Controller\AppController::getContentAction }
