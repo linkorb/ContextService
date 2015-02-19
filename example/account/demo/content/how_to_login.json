@@ -2,7 +2,7 @@
     "title": "How to log in?",
     "type": "faq",
     "body": "<h1>How to login?</h1><p>You can login using the login box.</p>",
-    "seealso": [
+    "related": [
         "how_to_sign_up",
         "how_to_logout"
     ]
