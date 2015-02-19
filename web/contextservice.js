@@ -14,9 +14,11 @@
         popupResponse();
     },
     popupResponse = function() {
-        var b = d.createElement('div');
+        var b = d.createElement('div'),i;
         b.className = 'cs-message';
-        b.innerHTML = csObject.response.content;
+        for (i in csObject.response.content) {
+            b.innerHTML+= '<div>'+csObject.response.content[i].title+'</div>';
+        }
         d.body.appendChild(b);
     },
 
@@ -32,7 +34,7 @@
     listen = function(){
         var eles = d.querySelectorAll('[data-csid]');
         for (var i = 0; i < eles.length; i++) {
-            eles[i].addEventListener('click', load);
+            eles[i].addEventListener('click', load, false);
         };
     },
     load = function(event) {
@@ -41,7 +43,7 @@
     },
     fetchPage = function(){
         if (csObject.account && csObject.contextid) {
-            jsonp(csObject.baseUri+'api/v1/fetchindex/'+csObject.account+'/'+csObject.contextid);
+            jsonp(csObject.baseUri+'api/v1/index/'+csObject.account+'/'+csObject.contextid);
         }
     };
     w.addEventListener('load', init, false);
