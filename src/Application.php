@@ -37,8 +37,7 @@ class Application extends SilexApplication
         $this['contextservice.datapath'] = $this['contextservice.basepath'] . '/example';
         $this['contextservice.responsemode'] = 'script';
     }
-    
-    
+
     private function configureRoutes()
     {
         $locator = new FileLocator(array($this['contextservice.basepath'] . '/app'));

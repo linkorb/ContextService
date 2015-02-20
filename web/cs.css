@@ -1,0 +1,41 @@
+.cs-message {
+	position: fixed;
+	background-color: #ebf4dd;
+	border: solid 1px #64992C;
+	border-radius: 3px;
+	padding: 10px;
+	top: 20px;
+    left: 50%;
+    margin-left: -200px;
+    width: 400px;
+
+    opacity: 0.8;
+    box-shadow: 3px 5px 10px #aaa;
+}
+.cs-message:hover {
+	opacity: 1;
+}
+#cs_data_container {
+	position: absolute;
+}
+
+#cs_index_container, #cs_data_container, .cs-content-item {
+	display: none;
+}
+#cs_data_container.cs-active, #cs_data_container .cs-content-item.cs-active {
+	display: block;
+}
+body[data-cs-active="true"] #cs_index_container {
+	display: block;
+}
+body[data-cs-active="true"] [data-cs-highlight="true"] {
+	background-color: red;
+}
+
+#cs_index_container {
+	width: 400px;
+}
+#cs_index_container .cs-active a {
+	color: #64992C;
+	font-weight: bold;
+}

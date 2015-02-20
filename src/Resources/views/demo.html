@@ -4,7 +4,8 @@
         <!-- Latest compiled and minified CSS -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
     </head>
-    <body >
+    <body>
+
         <div class="container">
             <h1>Context service demo</h1>
             <p>This simple static HTML document demonstrates different ways to link content to contexts and elements.</p>
@@ -53,14 +54,18 @@
                 },
                 contextid: function(v){
                     this.contextid=v;
+                },
+                setContentTypes: function(v){
+                    this.contentTypes=v;
                 }}
             var s=d.createElement('script'), m=d.getElementsByTagName('script')[0];
             s.async=1;
-            s.src=f+'contextservice.js';
+            s.src=f+'cs.js';
             m.parentNode.insertBefore(s,m);
         })(window,document,'//localhost:8787/','ContextService');
 
         ContextService.account('demo');
+        ContextService.setContentTypes('faq,article');
         ContextService.contextid('hello_world');
         
         </script>
