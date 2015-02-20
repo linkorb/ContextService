@@ -20,43 +20,20 @@ class AppController
 
     public function getIndexAction(Application $app, $account, $contextid)
     {
-        $data = $this->getDataFromFile($app, $account, $contextid, 'context');
-        if (gettype($data) === 'string') {
-            return $this->returnJsonError($data);
-        }
-        
-        switch ($app['contextservice.responsemode']) {
-            case "json":
-                $response = new JsonResponse();
-                $response->setData($data);
-                break;
-            default:
-                $response = new Response("window.ContextService.jsonpIndexCallback(".json_encode($data).");");
-                $response->headers->set('Content-Type', 'text/javascript');
-                break;
-        }
-        return $response;
+        return $this->resposeByMode(
+            $app,
+            $this->getDataFromFile($app, $account, $contextid, 'context'),
+            'context'
+        );
     }
     
     public function getContentAction(Application $app, $account, $contentid)
     {
-        $data = $this->getDataFromFile($app, $account, $contentid, 'content');
-        if (gettype($data) === 'string') {
-            return $this->returnJsonError($data);
-        }
-        $data['contentid'] = $contentid;
-        
-        switch ($app['contextservice.responsemode']) {
-            case "json":
-                $response = new JsonResponse();
-                $response->setData($data);
-                break;
-            default:
-                $response = new Response("window.ContextService.jsonpContentCallback(".json_encode($data).");");
-                $response->headers->set('Content-Type', 'text/javascript');
-                break;
-        }
-        return $response;
+        return $this->resposeByMode(
+            $app,
+            $this->getDataFromFile($app, $account, $contentid, 'content'),
+            'content'
+        );
     }
 
 
@@ -66,6 +43,7 @@ class AppController
         if (gettype($data) === 'string') {
             return $this->returnJsonError($data);
         }
+
         $body = $data['body'];
         
         $html = file_get_contents($app['contextservice.datapath'] . '/account/' . $account . '/templates/layout.html');
@@ -77,16 +55,41 @@ class AppController
     private function getDataFromFile(Application $app, $account, $id, $indexOrContent)
     {
         $type = ($indexOrContent == 'content') ? 'content' : 'context';
-        $filename = $app['contextservice.datapath'] .'/account/'. $account .'/'. $type .'/'. $id .'.json';
-        
+        $filename = $app['contextservice.datapath'] . '/account/' . $account . '/' . $type . '/' . $id . '.json';
 
         if (!file_exists($filename)) {
-            return 'No content found for this account + '. $type .'id';
+            return 'No content found for this account + ' . $type . 'id';
         }
 
         $json = file_get_contents($filename);
         // Validate if the content is valid json
-        return json_decode($json, true);
+        $data = json_decode($json, true);
+        if ($indexOrContent == 'content') {
+            $data['contentid'] = $id;
+        }
+        return $data;
+    }
+
+    private function resposeByMode($app, $data, $indexOrContent)
+    {
+        if (gettype($data) === 'string') {
+            return $this->returnJsonError($data);
+        }
+        switch ($app['contextservice.responsemode']) {
+            case "json":
+                $response = new JsonResponse();
+                $response->setData($data);
+                break;
+            default:
+                if ($indexOrContent == 'content') {
+                    $response = new Response("window.ContextService.jsonpContentCallback(".json_encode($data).");");
+                } else {
+                    $response = new Response("window.ContextService.jsonpIndexCallback(".json_encode($data).");");
+                }
+                $response->headers->set('Content-Type', 'text/javascript');
+                break;
+        }
+        return $response;
     }
 
     public function returnJsonError($message)
