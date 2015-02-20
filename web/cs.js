@@ -154,6 +154,10 @@
         w.console.log(msg);
     },
     toggleCSActive = function(event) {
+        var tagName=event.target.tagName.toLowerCase();
+        if (tagName == 'input' || tagName == 'textarea') {
+            return;
+        }
         var code=event.keyCode||event.which,i;
         if (event.shiftKey && code===191) {
             CSO.isActive = d.body.dataset.csActive = d.body.dataset.csActive == 'false';
