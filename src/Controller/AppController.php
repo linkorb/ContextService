@@ -11,27 +11,19 @@ use RuntimeException;
 
 class AppController
 {
-    private $baseurl;
-    
     public function indexAction()
     {
-        $data = array('ContextService' => 'is awesome');
         $response = new JsonResponse();
-        $response->setData($data);
+        $response->setData(array('ContextService' => 'is awesome'));
         return $response;
     }
 
     public function getIndexAction(Application $app, $account, $contextid)
     {
-
-        
-        $filename = $app['contextservice.datapath'] . '/account/' . $account . '/context/' . $contextid . '.json';
-        if (!file_exists($filename)) {
-            return $this->returnJsonError("No content found for this account + contextid");
+        $data = $this->getDataFromFile($app, $account, $contextid, 'context');
+        if (gettype($data) === 'string') {
+            return $this->returnJsonError($data);
         }
-        $json = file_get_contents($filename);
-        // Validate if the content is valid json
-        $data = json_decode($json, true);
         
         switch ($app['contextservice.responsemode']) {
             case "json":
@@ -48,14 +40,10 @@ class AppController
     
     public function getContentAction(Application $app, $account, $contentid)
     {
-        $filename = $app['contextservice.datapath'] . '/account/' . $account . '/content/' . $contentid . '.json';
-        if (!file_exists($filename)) {
-            return $this->returnJsonError("No content found for this account + contextid");
+        $data = $this->getDataFromFile($app, $account, $contentid, 'content');
+        if (gettype($data) === 'string') {
+            return $this->returnJsonError($data);
         }
-        $json = file_get_contents($filename);
-
-        // Validate if the content is valid json
-        $data = json_decode($json, true);
         $data['contentid'] = $contentid;
         
         switch ($app['contextservice.responsemode']) {
@@ -74,35 +62,42 @@ class AppController
 
     public function viewContentAction(Application $app, $account, $contentid)
     {
-        $filename = $app['contextservice.datapath'] . '/account/' . $account . '/content/' . $contentid . '.json';
-        if (!file_exists($filename)) {
-            return $this->returnJsonError("No content found for this account + contextid");
+        $data = $this->getDataFromFile($app, $account, $contentid, 'content');
+        if (gettype($data) === 'string') {
+            return $this->returnJsonError($data);
         }
-        $json = file_get_contents($filename);
-        // Validate if the content is valid json
-        $data = json_decode($json, true);
         $body = $data['body'];
+        
         $html = file_get_contents($app['contextservice.datapath'] . '/account/' . $account . '/templates/layout.html');
         $html = str_replace("{{body}}", $body, $html);
         $response = new Response($html);
         return $response;
-
     }
 
-    
+    private function getDataFromFile(Application $app, $account, $id, $indexOrContent)
+    {
+        $type = ($indexOrContent == 'content') ? 'content' : 'context';
+        $filename = $app['contextservice.datapath'] .'/account/'. $account .'/'. $type .'/'. $id .'.json';
+        
+
+        if (!file_exists($filename)) {
+            return 'No content found for this account + '. $type .'id';
+        }
+
+        $json = file_get_contents($filename);
+        // Validate if the content is valid json
+        return json_decode($json, true);
+    }
+
     public function returnJsonError($message)
     {
-        $data = array();
-        $data['message'] = $message;
         $response = new JsonResponse();
-        $response->setData($data);
+        $response->setData(array('message' => $message));
         return $response;
     }
 
     public function demoAction()
     {
-        $html = file_get_contents(__DIR__ . '/../Resources/views/demo.html');
-        $response = new Response($html);
-        return $response;
+        return new Response(file_get_contents(__DIR__ . '/../Resources/views/demo.html'));
     }
 }

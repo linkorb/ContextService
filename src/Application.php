@@ -20,10 +20,10 @@ class Application extends SilexApplication
         $this->configureParameters();
         $this->configureApplication();
         $this->configureRoutes();
-        $this->configureProviders();
-        $this->configureServices();
-        $this->configureSecurity();
-        $this->configureListeners();
+        // $this->configureProviders();
+        // $this->configureServices();
+        // $this->configureSecurity();
+        // $this->configureListeners();
     }
     
     private function configureParameters()
@@ -36,9 +36,6 @@ class Application extends SilexApplication
         $this['contextservice.baseurl'] = 'http://localhost:8787'; // TODO: Use config file
         $this['contextservice.datapath'] = $this['contextservice.basepath'] . '/example';
         $this['contextservice.responsemode'] = 'script';
-        //$parser = new YamlParser();
-        //$config = $parser->parse(file_get_contents($this['contextservice.basepath'] . '/mugshot.yml'));
-        //print_r($config);
     }
     
     
@@ -48,7 +45,7 @@ class Application extends SilexApplication
         $loader = new YamlFileLoader($locator);
         $this['routes'] = $loader->load('routes.yml');
     }
-    
+    /*
     private function configureProviders()
     {
     }
@@ -66,4 +63,5 @@ class Application extends SilexApplication
     private function configureListeners()
     {
     }
+    */
 }
