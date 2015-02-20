@@ -7,37 +7,57 @@
         if (CSO) {
             CSO.jsonpIndexCallback = jsonpIndexCallback;
             // CSO.jsonpContentCallback = jsonpContentCallback;
-            CSO.contentResponse = [];
+            CSO.contentTypes={};
+            (CSO.contentTypesString||'').split(',').forEach(function(v){
+                CSO.contentTypes[v]=v;
+            });
+            CSO.contentTypes['']='';
             attachKeyObserver();
             fetchIndex();
         }
     },
     fetchIndex = function(){
         if (CSO.account && CSO.contextid) {
-            jsonp(CSO.baseUri+'api/v1/index/'+CSO.account+'/'+CSO.contextid+'?contenttypes='+CSO.contentTypes);
+            jsonp(CSO.baseUri+'api/v1/index/'+CSO.account+'/'+CSO.contextid+'?contenttypes='+CSO.contentTypesString);
         }
     },
     renderIndexData = function() {
-        var id = 'cs_index_container', o='', contentid,cssselector,lineContent;
+        var id = 'cs_index_container', o='',i, contentid,cssselector,lineContent,types={},type;
         getIndexContainer();
         
         for (i in CSO.indexResponse.content) {
             cssselector = CSO.indexResponse.content[i].cssselector||'';
             contentid =CSO.indexResponse.content[i].contentid||'';
+            type = CSO.indexResponse.content[i].type||'';
 
-            // generate index HTML
-            lineContent = '<a target="_blank" href="'+CSO.baseUri+'content/'+CSO.account+'/'+contentid+'">'+CSO.indexResponse.content[i].title+'</a>';
-            o+='<li id="cs_index_'+contentid+'">'+lineContent+'</li>';
-            
-            // generate element content HTML
-            getContentContainer().appendChild(
-                createElementInBody('cs_data_'+contentid, 'cs-content-item', lineContent)
-            );
+            if (contentid) {
+                // generate index HTML
+                lineContent = '<a target="_blank" href="'+CSO.baseUri+'content/'+CSO.account+'/'+contentid+'">'+CSO.indexResponse.content[i].title+'</a>';
+                
+                // o+='<li id="cs_index_'+contentid+'" data-cs-type="'+type+'">'+lineContent+'</li>';
+                if (CSO.contentTypes[type]) {
+                    if (!types[type])
+                        types[type] = [];
+                    types[type].push('<dd id="cs_index_'+contentid+'" data-cs-type="'+type+'">'+lineContent+'</dd>');
+                }
+                
+                // generate element content HTML
+                getContentContainer().appendChild(
+                    createElementInBody('cs_data_'+contentid, 'cs-content-item', lineContent)
+                );
 
-            // observers
-            observeElements(cssselector, contentid);
+                // observers
+                observeElements(cssselector, contentid);
+            }
         }
-        CSO.indexDataContainer.innerHTML = '<ul>'+o+'</ul>';
+        for (i in types){
+            o+='<dl><dt>'+i+'</dt>';
+            types[i].forEach(function(v,k){
+                o+=v;
+            });
+            o+='</dl>';
+        }
+        CSO.indexDataContainer.innerHTML = '<div>'+o+'</div>';
     },
     getContentContainer = function() {
         if (!CSO.contentDataContainer){
@@ -84,7 +104,7 @@
         if (!CSO.isActive) {
             return false;
         }
-        var eles = getIndexContainer().querySelectorAll('li.cs-active'),i;
+        var eles = getIndexContainer().querySelectorAll('.cs-active'),i;
         for (i = 0; i < eles.length; i++) {
             eles[i].classList.remove('cs-active');
         }

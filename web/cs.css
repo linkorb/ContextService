@@ -11,6 +11,7 @@
 
     opacity: 0.8;
     box-shadow: 3px 5px 10px #aaa;
+    z-index: 10;
 }
 .cs-message:hover {
 	opacity: 1;
