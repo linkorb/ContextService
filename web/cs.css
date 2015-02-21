@@ -30,11 +30,10 @@ body[data-cs-active="true"] #cs_index_container {
 	display: block;
 }
 body[data-cs-active="true"] [data-cs-highlight="true"] {
-	background-color: red;
+	xbackground-color: red;
 }
 
 #cs_index_container {
-	width: 400px;
 }
 #cs_index_container .cs-active a {
 	color: #64992C;
