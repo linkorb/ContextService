@@ -13,6 +13,7 @@
             });
             CSO.contentTypes['']='';
             attachKeyObserver();
+            attachButtonObserver();
             fetchIndex();
         }
     },
@@ -118,12 +119,17 @@
     
 
     // Observers
-
     attachKeyObserver = function(){
         // give initial csActive status
         d.body.dataset.csActive = 'false';
         CSO.isActive = false;
-        d.addEventListener('keydown', toggleCSActive);
+        d.addEventListener('keydown', keyDownListener);
+    },
+    attachButtonObserver = function(){
+        var eles = d.querySelectorAll('[data-cs-togglebutton="true"]'),i;
+        for (i = 0; i < eles.length; i++) {
+            eles[i].addEventListener('click', toggleCSActive, false);
+        }
     },
     observeElements = function(CssSelector, contentid){
         if (CssSelector && contentid) {
@@ -173,17 +179,23 @@
     log = function(msg){
         w.console.log(msg);
     },
-    toggleCSActive = function(event) {
+    keyDownListener = function(event) {
         var tagName=event.target.tagName.toLowerCase();
         if (tagName == 'input' || tagName == 'textarea') {
             return;
         }
         var code=event.keyCode||event.which,i;
         if (event.shiftKey && code===191) {
-            CSO.isActive = d.body.dataset.csActive = d.body.dataset.csActive == 'false';
+            toggleCSActive();
         }
-        hideElementContent();
     },
+    
+    toggleCSActive = function() {
+        CSO.isActive = d.body.dataset.csActive = d.body.dataset.csActive == 'false';
+        hideElementContent();
+        return false;
+    },
+    
     /*
     toggle = function(element){
         element.style.display=element.style.display=='none'?'':'none';
