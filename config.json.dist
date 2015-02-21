@@ -1,0 +1,4 @@
+{
+    "datapath": "/my/content/path/",
+    "baseurl": "http://www.example.web:8787/"
+}

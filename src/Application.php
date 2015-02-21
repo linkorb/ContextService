@@ -33,9 +33,22 @@ class Application extends SilexApplication
     
     private function configureApplication()
     {
-        $this['contextservice.baseurl'] = 'http://localhost:8787'; // TODO: Use config file
+        // Load defaults, in case configuration is missing
+        $this['contextservice.baseurl'] = 'http://localhost:8787';
         $this['contextservice.datapath'] = $this['contextservice.basepath'] . '/example';
         $this['contextservice.responsemode'] = 'script';
+
+        $configfilename = __DIR__ . '/../config.json';
+        if (file_exists($configfilename)) {
+            $json = file_get_contents($configfilename);
+            $config = json_decode($json, true);
+            if (isset($config['datapath'])) {
+                $this['contextservice.datapath'] = $config['datapath'];
+            }
+            if (isset($config['baseurl'])) {
+                $this['contextservice.baseurl'] = $config['baseurl'];
+            }
+        }
     }
 
     private function configureRoutes()
