@@ -39,3 +39,9 @@ body[data-cs-active="true"] [data-cs-highlight="true"] {
 	color: #64992C;
 	font-weight: bold;
 }
+.cs-data-content-item {
+	display: none;
+}
+.cs-data-content-item.cs-active {
+	display: block;
+}

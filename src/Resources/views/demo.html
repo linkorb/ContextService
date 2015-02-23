@@ -48,21 +48,17 @@
         <script>
         (function(w,d,f,k,a){
             w[k] = w[k]||{
-                baseUri:f,
-                contentTypesString:a,
-                account: function(v){
-                    this.account=v;
-                },
-                contextid: function(v){
-                    this.contextid=v;
-                }}
+                baseUri:f,contentTypesString:a,
+                account:function(v){this.account=v;},
+                contextid:function(v){this.contextid=v;},
+                mode:function(v){this.mode=v;}
+            }
             var s=d.createElement('script'), m=d.getElementsByTagName('script')[0];
-            s.async=1;
-            s.src=f+'cs.js';
-            m.parentNode.insertBefore(s,m);
+            s.async=1;s.src=f+'cs.js';m.parentNode.insertBefore(s,m);
         })(window,document,'//localhost:8787/','ContextService','faq,article');
 
         ContextService.account('demo');
+        ContextService.mode('inline');
         ContextService.contextid('hello_world');
         
         </script>
