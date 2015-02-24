@@ -8,7 +8,8 @@
         {
             "contentid": "installing_chrome",
             "title": "How do I install Google Chrome?",
-            "type": "article"
+            "type": "article",
+            "cssselector": ".buttonbox"
         },
         {
             "contentid": "how_to_login",

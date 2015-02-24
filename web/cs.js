@@ -85,8 +85,9 @@
             return false;
         }
         hideElementContentItems();
-        if (event.target.dataset.csContentIds) {
-            event.target.dataset.csContentIds.split(',').forEach(function(id){
+        var contentids = lookUpElementDataAttribute(event.target, 'csContentIds');
+        if (contentids) {
+            contentids.split(',').forEach(function(id){
                 var e = d.querySelector('#cs_data_'+id);
                 if (e) {
                     e.classList.add('cs-active');
@@ -125,12 +126,13 @@
         if (!CSO.isActive) {
             return false;
         }
-        var eles = getIndexContainer().querySelectorAll('.cs-active'),i;
+        var eles = getIndexContainer().querySelectorAll('.cs-active'),i,contentids = lookUpElementDataAttribute(event.target, 'csContentIds');;
         for (i = 0; i < eles.length; i++) {
             eles[i].classList.remove('cs-active');
         }
-        if (event.target.dataset.csContentIds) {
-            event.target.dataset.csContentIds.split(',').forEach(function(id){
+
+        if (contentids) {
+            contentids.split(',').forEach(function(id){
                 var e = d.querySelector('#cs_index_'+id);
                 if (e) {
                     e.classList.add('cs-active');
@@ -165,11 +167,23 @@
             for (i = 0; i < eles.length; i++) {
                 eles[i].dataset.csContentIds = (eles[i].dataset.csContentIds?(eles[i].dataset.csContentIds+','):'')+contentid;
                 eles[i].dataset.csHighlight = true;
-                eles[i].addEventListener('mouseover', showElementContent, false);
-                // eles[i].addEventListener('mouseout', hideElementContent, false);
-                eles[i].addEventListener('mouseover', highlightContentInIndexData, false);
+                // eles[i].addEventListener('mouseover', showElementContent, false);
+                // eles[i].addEventListener('mouseover', highlightContentInIndexData, false);
+                attachElementObservers(eles[i], 'mouseover');
             };
         }
+    },
+    attachElementObservers = function(element, eventName){
+        attachElementObserver(element, eventName);
+        // add observers to descendants
+        var eles=element.querySelectorAll('*'),i;
+        for (i = 0; i < eles.length; i++) {
+            attachElementObserver(eles[i], eventName);
+        }
+    },
+    attachElementObserver = function(element, eventName){
+        element.addEventListener(eventName, showElementContent, false);
+        element.addEventListener(eventName, highlightContentInIndexData, false);
     },
     attachBodyObserver = function(){
         d.body.addEventListener('click', hideElementContent, false);
@@ -233,16 +247,14 @@
         showDataContent();
         return false;
     },
-    /*
-    parentsHasDataAttribute = function(element, attr){
-        while(element = element.parentNode) {
+    lookUpElementDataAttribute = function(element, attr){
+        do {
             if (element.dataset[attr]) {
-                return true;
+                return element.dataset[attr];
             }
-        }
-        return false;
+        } while (element = element.parentNode)
+        return null;
     },
-    */
     
     /*
     toggle = function(element){
