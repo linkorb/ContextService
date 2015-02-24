@@ -85,12 +85,14 @@
             return false;
         }
         hideElementContentItems();
-        event.target.dataset.csContentIds.split(',').forEach(function(id){
-            var e = d.querySelector('#cs_data_'+id);
-            if (e) {
-                e.classList.add('cs-active');
-            }
-        });
+        if (event.target.dataset.csContentIds) {
+            event.target.dataset.csContentIds.split(',').forEach(function(id){
+                var e = d.querySelector('#cs_data_'+id);
+                if (e) {
+                    e.classList.add('cs-active');
+                }
+            });
+        }
         var c = getContentContainer();
         c.classList.add('cs-active');
         var rect = event.target.getBoundingClientRect(), crect = c.getBoundingClientRect();
@@ -127,12 +129,14 @@
         for (i = 0; i < eles.length; i++) {
             eles[i].classList.remove('cs-active');
         }
-        event.target.dataset.csContentIds.split(',').forEach(function(id){
-            var e = d.querySelector('#cs_index_'+id);
-            if (e) {
-                e.classList.add('cs-active');
-            }
-        });
+        if (event.target.dataset.csContentIds) {
+            event.target.dataset.csContentIds.split(',').forEach(function(id){
+                var e = d.querySelector('#cs_index_'+id);
+                if (e) {
+                    e.classList.add('cs-active');
+                }
+            });
+        }
     },
     
 
@@ -229,6 +233,16 @@
         showDataContent();
         return false;
     },
+    /*
+    parentsHasDataAttribute = function(element, attr){
+        while(element = element.parentNode) {
+            if (element.dataset[attr]) {
+                return true;
+            }
+        }
+        return false;
+    },
+    */
     
     /*
     toggle = function(element){
