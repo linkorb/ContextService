@@ -103,9 +103,16 @@
     hideElementContent = function(event){
         // hideElementContentItems();
         getContentContainer().classList.remove('cs-active');
+        hideHighlightsInIndexData();
     },
     hideElementContentItems = function(){
         var eles = d.querySelectorAll('#cs_data_container .cs-content-item.cs-active'),i;
+        for (i = 0; i < eles.length; i++) {
+            eles[i].classList.remove('cs-active');
+        }
+    },
+    hideHighlightsInIndexData = function(){
+        var eles = d.querySelectorAll('#cs_index_container .cs-active'),i;
         for (i = 0; i < eles.length; i++) {
             eles[i].classList.remove('cs-active');
         }
@@ -232,7 +239,7 @@
     },
     keyDownListener = function(event) {
         var tagName=event.target.tagName.toLowerCase();
-        if (tagName == 'input' || tagName == 'textarea') {
+        if (tagName == 'input' || tagName == 'textarea' || event.target.contentEditable === 'true') {
             return;
         }
         var code=event.keyCode||event.which,i;
