@@ -12,6 +12,7 @@
                 CSO.contentTypes[v]=v;
             });
             CSO.contentTypes['']='';
+            CSO.speechEffectEnabled=true;
             attachKeyObserver();
             attachButtonObserver();
             attachBodyObserver();
@@ -67,8 +68,11 @@
     },
     getContentContainer = function() {
         if (!CSO.contentDataContainer){
-            var id = 'cs_data_container';
-            CSO.contentDataContainer = d.querySelector('#'+id) || createElementInBody(id, 'cs-content-container cs-message');
+            var id = 'cs_data_container', klas='cs-content-container cs-message';
+            if (CSO.speechEffectEnabled) {
+                klas+=' speech-enabled';
+            }
+            CSO.contentDataContainer = d.querySelector('#'+id) || createElementInBody(id, klas);
         }
         return CSO.contentDataContainer;
     },
@@ -94,16 +98,33 @@
                 }
             });
         }
-        var c = getContentContainer();
+        positionContentContainer(event);
+    },
+    positionContentContainer = function(event){
+        var c = getContentContainer(),rect = event.target.getBoundingClientRect(), crect = c.getBoundingClientRect();
+        var body = d.body,docElem = d.documentElement,
+        scrollTop = window.pageYOffset || docElem.scrollTop || body.scrollTop,
+        scrollLeft = window.pageXOffset || docElem.scrollLeft || body.scrollLeft,
+        clientTop = docElem.clientTop || body.clientTop || 0,
+        clientLeft = docElem.clientLeft || body.clientLeft || 0;
+
+        c.style.left = (rect.left + scrollLeft - clientLeft + 50 + (rect.width/2))+'px';
+        c.style.top = (rect.top + scrollTop - clientTop - crect.height - 15)+'px';
+        // speech thingy
+        if (CSO.speechEffectEnabled && crect.height > 0) {
+            var offset = crect.height;
+            offset -= parseInt(w.getComputedStyle(c).getPropertyValue('border-top-width'))||0;
+            offset -= parseInt(w.getComputedStyle(c).getPropertyValue('border-bottom-width'))||0;
+            addCSSRule('#cs_data_container::before', 'top:'+offset+'px !important;');
+            addCSSRule('#cs_data_container::after', 'top:'+offset+'px !important;');
+        }
         c.classList.add('cs-active');
-        var rect = event.target.getBoundingClientRect(), crect = c.getBoundingClientRect();
-        c.style.left = rect.left+'px';
-        c.style.top = (rect.top - crect.height - 10)+'px';
     },
     hideElementContent = function(event){
         // hideElementContentItems();
         getContentContainer().classList.remove('cs-active');
         hideHighlightsInIndexData();
+        clearCSSRules();
     },
     hideElementContentItems = function(){
         var eles = d.querySelectorAll('#cs_data_container .cs-content-item.cs-active'),i;
@@ -195,6 +216,16 @@
     attachBodyObserver = function(){
         d.body.addEventListener('click', hideElementContent, false);
     },
+    keyDownListener = function(event) {
+        var tagName=event.target.tagName.toLowerCase();
+        if (tagName == 'input' || tagName == 'textarea' || event.target.contentEditable === 'true') {
+            return;
+        }
+        var code=event.keyCode||event.which,i;
+        if (event.shiftKey && code===191) {
+            toggleCSActive();
+        }
+    },
     
     // Connectivity functions
 
@@ -237,17 +268,6 @@
     log = function(msg){
         w.console.log(msg);
     },
-    keyDownListener = function(event) {
-        var tagName=event.target.tagName.toLowerCase();
-        if (tagName == 'input' || tagName == 'textarea' || event.target.contentEditable === 'true') {
-            return;
-        }
-        var code=event.keyCode||event.which,i;
-        if (event.shiftKey && code===191) {
-            toggleCSActive();
-        }
-    },
-    
     toggleCSActive = function() {
         CSO.isActive = d.body.dataset.csActive = d.body.dataset.csActive == 'false';
         hideElementContent();
@@ -268,6 +288,29 @@
         element.style.display=element.style.display=='none'?'':'none';
     },
     */
+    addCSSRule = function(selector, rules, index) {
+        var sheet = getDynamicStyleSheet().sheet;
+        var index=index||(sheet.cssRules?sheet.cssRules.length:0);
+        if (sheet.insertRule) {
+            sheet.insertRule(selector + '{' + rules + '}', index);
+        } else {
+            sheet.addRule(selector, rules, index);
+        }
+    },
+    clearCSSRules = function(){
+        var sheet = getDynamicStyleSheet().sheet, rules = sheet.cssRules||[],i;
+        for (i = 0; i < rules.length; i++) {
+            sheet.deleteRule(i);
+        };
+    },
+    getDynamicStyleSheet = function(){
+        if (!CSO.dynamicCSS) {
+            CSO.dynamicCSS = d.createElement('style');
+            d.head.appendChild(CSO.dynamicCSS);
+            CSO.id='cs_dynamic_css';
+        }
+        return CSO.dynamicCSS;
+    },
     createElementInBody = function(id, className, content){
         var c = d.createElement('div');
         if (id)
