@@ -34,7 +34,7 @@ body[data-cs-active="true"] [data-cs-highlight="true"] {
 	xbackground-color: red;
 }
 
-#cs_index_container .cs-active a {
+#cs_index_container .cs-highlight a {
 	color: #64992C;
 	font-weight: bold;
 }
