@@ -127,22 +127,13 @@
         clearCSSRules();
     },
     hideElementContentItems = function(){
-        var eles = d.querySelectorAll('#cs_data_container .cs-content-item.cs-active'),i;
-        for (i = 0; i < eles.length; i++) {
-            eles[i].classList.remove('cs-active');
-        }
+        executeByCssSelector('#cs_data_container .cs-content-item.cs-active', 'removeclass', 'cs-active');
     },
     hideHighlightsInIndexData = function(){
-        var eles = d.querySelectorAll('#cs_index_container .cs-highlight'),i;
-        for (i = 0; i < eles.length; i++) {
-            eles[i].classList.remove('cs-highlight');
-        }
+        executeByCssSelector('#cs_index_container .cs-highlight', 'removeclass', 'cs-highlight');
     },
     showDataContent = function(contentid){
-        var eles = d.querySelectorAll('.cs-data-content-item'),i;
-        for (i = 0; i < eles.length; i++) {
-            eles[i].classList.remove('cs-active');
-        }
+        executeByCssSelector('.cs-data-content-item', 'removeclass', 'cs-active');
         if (contentid) {
             d.querySelector('#cs_data_content_'+contentid).classList.add('cs-active');
         }
@@ -154,10 +145,9 @@
         if (!CSO.isActive) {
             return false;
         }
-        var eles = getIndexContainer().querySelectorAll('.cs-highlight'),i,contentids = lookUpElementDataAttribute(event.target, 'csContentIds');;
-        for (i = 0; i < eles.length; i++) {
-            eles[i].classList.remove('cs-highlight');
-        }
+        var contentids = lookUpElementDataAttribute(event.target, 'csContentIds');;
+        
+        hideHighlightsInIndexData();
 
         if (contentids) {
             contentids.split(',').forEach(function(id){
@@ -168,9 +158,9 @@
             });
         }
     },
-    
 
     // Observers
+
     attachKeyObserver = function(){
         // give initial csActive status
         d.body.dataset.csActive = 'false';
@@ -178,16 +168,10 @@
         d.addEventListener('keydown', keyDownListener);
     },
     attachButtonObserver = function(){
-        var eles = d.querySelectorAll('[data-cs-togglebutton="true"]'),i;
-        for (i = 0; i < eles.length; i++) {
-            eles[i].addEventListener('click', toggleCSActive, false);
-        }
+        executeByCssSelector('[data-cs-togglebutton="true"]', 'addobserver', 'click', toggleCSActive);
     },
     attachInlineModeLinks = function(){
-        var eles = d.querySelectorAll('#cs_data_container a, #cs_index_container a'),i;
-        for (i = 0; i < eles.length; i++) {
-            eles[i].addEventListener('click', fetchElementContents, false);
-        }
+        executeByCssSelector('#cs_data_container a, #cs_index_container a', 'addobserver', 'click', fetchElementContents);
     },
     observeElements = function(CssSelector, contentid){
         if (CssSelector && contentid) {
@@ -195,8 +179,6 @@
             for (i = 0; i < eles.length; i++) {
                 eles[i].dataset.csContentIds = (eles[i].dataset.csContentIds?(eles[i].dataset.csContentIds+','):'')+contentid;
                 eles[i].dataset.csHighlight = true;
-                // eles[i].addEventListener('mouseover', showElementContent, false);
-                // eles[i].addEventListener('mouseover', highlightContentInIndexData, false);
                 attachElementObservers(eles[i], 'mouseover');
             };
         }
@@ -282,7 +264,36 @@
         } while (element = element.parentNode)
         return null;
     },
-    
+    executeByCssSelector = function(CssSelector, action, value, extra){
+        var eles = d.querySelectorAll(CssSelector),i;
+        for (i = 0; i < eles.length; i++) {
+            switch (action) {
+                case 'addclass':
+                    eles[i].classList.add(value);
+                    break;
+                case 'removeclass':
+                    eles[i].classList.remove(value);
+                    break;
+                case 'addobserver':
+                     eles[i].addEventListener(value, extra, false);
+                     break;
+                default:
+                    log('Unsupported action to perform');
+                    break;
+            }
+        }
+    },
+    createElementInBody = function(id, className, content){
+        var c = d.createElement('div');
+        if (id)
+            c.id=id;
+        if (className)
+            c.className=className;
+        if (content)
+            c.innerHTML = content;
+        d.body.appendChild(c);
+        return c;
+    },
     /*
     toggle = function(element){
         element.style.display=element.style.display=='none'?'':'none';
@@ -310,17 +321,6 @@
             CSO.id='cs_dynamic_css';
         }
         return CSO.dynamicCSS;
-    },
-    createElementInBody = function(id, className, content){
-        var c = d.createElement('div');
-        if (id)
-            c.id=id;
-        if (className)
-            c.className=className;
-        if (content)
-            c.innerHTML = content;
-        d.body.appendChild(c);
-        return c;
     };
 
     // init once window loaded
